@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="80dp" android:layout_height="wrap_content"
+    android:textColor="?attr/tvMainColor"
+    android:paddingLeft="12dp"
+    android:textSize="16dp"
+    >
+
+</TextView>

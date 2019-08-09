@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="lvBackground" format="color" />
+    <attr name="tvBackground" format="color" />
+    <attr name="menu_search" format="string"/>
+    <attr name="menu_delete_all" format="string"/>
+    <attr name="menu_delete" format="string"/>
+    <attr name="titleColor" format="color"/>
+    <attr name="tvMainColor" format="color"/>
+    <attr name="tvSubColor" format="color"/>
+    <attr name="settingIcon" format="string"/>
+    <attr name="spinnerArrow" format="string"/>
+    <attr name="renewIcon" format="string"/>
+    <attr name="removeTag" format="string"/>
+    <attr name="addTag" format="string"/>
+    <attr name="addPlanTag" format="string"/>
+    <attr name="toolbarTheme" format="string"/>
+</resources>

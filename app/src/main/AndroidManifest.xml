@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.atry">
+
+    <application
+        android:theme="@style/DayTheme"
+        android:allowBackup="true"
+        android:icon="@mipmap/piggy_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/piggy_launcher_round"
+        android:supportsRtl="true"
+        >
+
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <activity android:name=".EditActivity">
+
+        </activity>
+        <activity android:name=".Setting.FabColorActivity"></activity>
+        <activity android:name=".UserSettingsActivity"></activity>
+        <activity android:name=".Alarm.EditAlarmActivity"></activity>
+        <receiver android:name=".Alarm.AlarmReceiver"></receiver>
+    </application>
+
+</manifest>
