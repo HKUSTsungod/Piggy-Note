@@ -51,7 +51,6 @@ import com.example.atry.Alarm.Plan;
 import com.example.atry.Alarm.PlanAdapter;
 import com.example.atry.Alarm.PlanDatabase;
 
-import java.sql.ResultSet;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1058,14 +1057,12 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, O
     //achievement system
     public class Achievement {
         private SharedPreferences sharedPreferences;
-        private boolean noteNumberState = false;
-        private boolean wordNumberState = false;
-        private boolean remainNumberState = false;
 
         private int noteNumber;
         private int wordNumber;
-        private int remainNumber;
-        private int maxRemainNumber;
+
+        private int noteLevel;
+        private int wordLevel;
 
         public Achievement(Context context) {
             sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -1076,27 +1073,39 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, O
         private void getPref() {
             noteNumber = sharedPreferences.getInt("noteNumber", 0);
             wordNumber = sharedPreferences.getInt("wordNumber", 0);
-            remainNumber = sharedPreferences.getInt("remainNumber", 0);
-            maxRemainNumber = sharedPreferences.getInt("maxRemainNumber", 0);
+            noteLevel = sharedPreferences.getInt("noteLevel", 0);
+            wordLevel = sharedPreferences.getInt("wordLevel", 0);
         }
 
         private void initPref() {
-
-            if (!sharedPreferences.contains("noteNumber")) {
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("noteNumber", 0);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            if (!sharedPreferences.contains("noteLevel")) {
+                editor.putInt("noteLevel", 0);
                 editor.commit();
-                if (!sharedPreferences.contains("wordNumber")) {
-                    editor.putInt("wordNumber", 0);
+                if (!sharedPreferences.contains("wordLevel")) {
+                    editor.putInt("wordLevel", 0);
                     editor.commit();
-                    if (!sharedPreferences.contains("remainNumber")) {
-                        editor.putInt("remainNumber", 0);
+
+                    addCurrent(noteList);
+                    if (sharedPreferences.contains("maxRemainNumber")) {
+                        editor.remove("maxRemainNumber");
                         editor.commit();
-                        if (!sharedPreferences.contains("maxRemainNumber")) {
-                            editor.putInt("maxRemainNumber", 0);
+                    }
+                    if (sharedPreferences.contains("remainNumber")){
+                        editor.remove("remainNumber");
+                        editor.commit();
+                    }
+                    if (!sharedPreferences.contains("noteNumber")) {
+                        editor.putInt("noteNumber", 0);
+                        editor.commit();
+                        addCurrent(noteList);
+                        if (!sharedPreferences.contains("wordNumber")) {
+                            editor.putInt("wordNumber", 0);
                             editor.commit();
+
                         }
                     }
+
                 }
             }
         }
@@ -1104,13 +1113,22 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, O
         //加入已写好的笔记
         private void addCurrent(List<Note> list) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt("noteNumber", list.size());
-            editor.putInt("remainNumber", list.size());
+            int tempNN = list.size();
+            editor.putInt("noteNumber", tempNN);
+            if (tempNN >= 1000) editor.putInt("noteLevel", 4);
+            else if (tempNN >= 100) editor.putInt("noteLevel", 3);
+            else if (tempNN >= 10) editor.putInt("noteLevel", 2);
+            else if (tempNN >= 1) editor.putInt("noteLevel", 1);
             int wordCount = 0;
             for (int i = 0; i < list.size(); i++) {
                 wordCount += list.get(i).getContent().length();
             }
             editor.putInt("wordNumber", wordCount);
+            if (wordCount >= 20000) editor.putInt("noteLevel", 5);
+            else if (wordCount >= 5000) editor.putInt("noteLevel", 4);
+            else if (wordCount >= 1000) editor.putInt("noteLevel", 3);
+            else if (wordCount >= 500) editor.putInt("noteLevel", 2);
+            else if (wordCount >= 100) editor.putInt("noteLevel", 1);
             editor.commit();
         }
 
@@ -1119,28 +1137,16 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, O
             SharedPreferences.Editor editor = sharedPreferences.edit();
             noteNumber++;
             editor.putInt("noteNumber", noteNumber);
-            noteNumberState = false;
 
             wordNumber += content.length();
             editor.putInt("wordNumber", wordNumber);
-            wordNumberState = false;
-
-            remainNumber++;
-            editor.putInt("remainNumber", remainNumber);
-            if (maxRemainNumber < remainNumber) {
-                editor.putInt("maxRemainNumber", remainNumber);
-                remainNumberState = false;
-            }
 
             editor.commit();
         }
 
         //删除笔记
         public void deleteNote() {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            remainNumber--;
-            editor.putInt("remainNumber", remainNumber);
-            editor.commit();
+
         }
 
         //编辑笔记，修改字数
@@ -1149,58 +1155,41 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, O
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 wordNumber += (newContent.length() - oldContent.length());
                 editor.putInt("wordNumber", wordNumber);
-                wordNumberState = false;
                 editor.commit();
             }
         }
 
         //笔记数成就
         public void noteNumberAchievement(int num) {
-            if (!noteNumberState) {
-                switch (num) {
-                    case 1:
-                        announcement("This is your first step!", 1, num);
-                        break;
-                    case 10:
-                        announcement("Keep going, and don't give up", 1, num);
-                        break;
-                    case 100:
-                        announcement("This has been a long way...", 1, num);
-                        break;
-                    case 1000:
-                        announcement("Final achievement! Well Done!", 1, num);
-                        break;
-                }
+            switch (num) {
+                case 1:
+                    if (noteLevel == 0) announcement("This is your first step!", 1, num);
+                    break;
+                case 10:
+                    if (noteLevel == 1) announcement("Keep going, and don't give up", 1, num);
+                    break;
+                case 100:
+                    if (noteLevel == 2) announcement("This has been a long way...", 1, num);
+                    break;
+                case 1000:
+                    if (noteLevel == 3) announcement("Final achievement! Well Done!", 1, num);
+                    break;
             }
+
         }
 
         //字数成就
         public void wordNumberAchievement(int num) {
-            if (!wordNumberState) {
-                if (num > 20000) announcement("Final Achievement! Congrats!", 2, 20000);
-                else if (num > 5000)
-                    announcement("A long story...", 2, 5000);
-                else if (num > 1000)
-                    announcement("Double essays!", 2, 1000);
-                else if (num > 500)
-                    announcement("You have written an essay!", 2, 500);
-                else if (num > 100)
-                    announcement("Take it slow to create more possibilities!", 2, 100);
-            }
-        }
+            if (num > 20000 && wordLevel == 4) announcement("Final Achievement! Congrats!", 2, 20000);
+            else if (num > 5000 && wordLevel == 3)
+                announcement("A long story...", 2, 5000);
+            else if (num > 1000 && wordLevel == 2)
+                announcement("Double essays!", 2, 1000);
+            else if (num > 500 && wordLevel == 1)
+                announcement("You have written an essay!", 2, 500);
+            else if (num > 100 && wordLevel == 0)
+                announcement("Take it slow to create more possibilities!", 2, 100);
 
-        //剩余篇数成就
-        public void remainNumberAchievement(int num) {
-            if (!remainNumberState) {
-                if (num > 800)
-                    announcement("Damn, whatever...", 3, 800);
-                else if (num > 300)
-                    announcement("FBI warning! Clear your notes!", 3, 300);
-                else if (num > 100)
-                    announcement("Clear your notes in time!", 3, 100);
-                else if (num > 50)
-                    announcement("Remember to clear notes often!", 3, 50);
-            }
         }
 
         //对话框
@@ -1215,7 +1204,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, O
                         }
                     })
                     .create().show();
-            setState(mode, true);
+            setState(mode);
         }
 
         //对话框标题
@@ -1231,17 +1220,19 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, O
             return null;
         }
 
-        public void setState(int mode, boolean state) {
+        public void setState(int mode) {
             //set corresponding state to true in case repetition of annoucement
+            SharedPreferences.Editor editor = sharedPreferences.edit();
             switch (mode) {
                 case 1:
-                    noteNumberState = state;
+                    noteLevel ++;
+                    editor.putInt("noteLevel", noteLevel);
+                    editor.commit();
                     break;
                 case 2:
-                    wordNumberState = state;
-                    break;
-                case 3:
-                    remainNumberState = state;
+                    wordLevel ++;
+                    editor.putInt("wordLevel", wordLevel);
+                    editor.commit();
                     break;
             }
         }
@@ -1250,24 +1241,18 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, O
         public void listen() {
             noteNumberAchievement(noteNumber);
             wordNumberAchievement(wordNumber);
-            remainNumberAchievement(remainNumber);
         }
 
         //重置成就
         public void resetAll() {
             //reset all prefs and state
-            setState(1, false);
-            setState(2, false);
-            setState(3, false);
             noteNumber = 0;
             wordNumber = 0;
-            remainNumber = 0;
-            maxRemainNumber = 0;
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putInt("noteNumber", noteNumber);
             editor.putInt("wordNumber", wordNumber);
-            editor.putInt("remainNumber", remainNumber);
-            editor.putInt("maxRemainNumber", maxRemainNumber);
+            editor.putInt("noteLevel", 0);
+            editor.putInt("wordLevel", 0);
             editor.commit();
         }
 
