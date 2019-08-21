@@ -17,25 +17,26 @@
         app:title="New Note"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
         <Spinner
             android:id="@+id/spinner"
             style="@style/spinner"
-            android:layout_marginStart="100dp"
-            android:spinnerMode="dropdown"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
             android:dropDownWidth="wrap_content"
             android:popupTheme="@style/spinnerPop"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content" />
+            android:spinnerMode="dropdown" />
     </android.support.v7.widget.Toolbar>
 
     <EditText
         android:id="@+id/et"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@null"
+        android:layout_height="match_parent"
         android:layout_margin="8dp"
+        android:gravity="top"
+        android:background="@null"
         android:textColor="?attr/tvMainColor"
-        android:textSize="24dp"
-        />
+        android:textSize="24dp" />
 
 </LinearLayout>

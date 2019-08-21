@@ -25,6 +25,7 @@ public class UserSettingsActivity extends BaseActivity {
     private Switch reverseSort;
     private LinearLayout fabColor;
     private LinearLayout fabPlanColor;
+    private Switch noteTitle;
     private SharedPreferences sharedPreferences;
 
     private static boolean night_change;
@@ -60,6 +61,7 @@ public class UserSettingsActivity extends BaseActivity {
         reverseSort = findViewById(R.id.reverseSort);
         fabColor = findViewById(R.id.fabColor);
         fabPlanColor = findViewById(R.id.fabPlanColor);
+        noteTitle = findViewById(R.id.noteTitle);
 
 
 
@@ -104,6 +106,17 @@ public class UserSettingsActivity extends BaseActivity {
                 intent.putExtra("mode", 2); // add plan button
                 startActivityForResult(intent, 1);
                 overridePendingTransition(R.anim.in_righttoleft, R.anim.no);
+            }
+        });
+
+        noteTitle.setChecked(sharedPreferences.getBoolean("noteTitle", true));
+        noteTitle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferences sharedPreferences1 = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                SharedPreferences.Editor editor = sharedPreferences1.edit();
+                editor.putBoolean("noteTitle", isChecked);
+                editor.commit();
             }
         });
 

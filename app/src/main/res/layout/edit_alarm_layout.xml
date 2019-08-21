@@ -84,7 +84,7 @@
         <EditText
             android:id="@+id/et"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="match_parent"
             android:background="@null"
             android:layout_margin="8dp"
             android:textColor="?attr/tvMainColor"

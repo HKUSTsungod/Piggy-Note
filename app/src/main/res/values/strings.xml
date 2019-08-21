@@ -7,4 +7,6 @@
     <string name="pref_fabcolor">Customize ADD NOTE button</string>
     <string name="pref_fabplancolor_summary">Choose the color of ADD PLAN button</string>
     <string name="pref_fabplancolor">Customize ADD PLAN button</string>
+    <string name="pref_notetitle">Note Title Style</string>
+    <string name="pref_notetitle_summary">Set the first line of note as its title</string>
 </resources>

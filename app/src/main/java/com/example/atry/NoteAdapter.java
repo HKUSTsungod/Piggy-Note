@@ -20,7 +20,7 @@ public class NoteAdapter extends BaseAdapter implements Filterable {
 
     private List<Note> backList;//用来备份原始数据
     private List<Note> noteList;//这个数据是会改变的，所以要有个变量来备份一下原始数据
-    MyFilter mFilter;
+    private MyFilter mFilter;
 
     public NoteAdapter(Context mContext, List<Note> noteList) {
         this.mContext = mContext;
@@ -52,7 +52,10 @@ public class NoteAdapter extends BaseAdapter implements Filterable {
         TextView tv_time = (TextView)v.findViewById(R.id.tv_time);
 
         //Set text for TextView
-        tv_content.setText(noteList.get(position).getContent());
+        String allText = noteList.get(position).getContent();
+        if (sharedPreferences.getBoolean("noteTitle" ,true))
+            tv_content.setText(allText.split("\n")[0]);
+        else tv_content.setText(allText);
         tv_time.setText(noteList.get(position).getTime());
 
         //Save note id to tag

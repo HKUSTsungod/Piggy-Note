@@ -500,6 +500,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, O
             editor.putInt("fabPlanColor", -500041);
             editor.commit();
         }
+        if(!sharedPreferences.contains("noteTitle")){
+            editor.putBoolean("noteTitle", true);
+            editor.commit();
+        }
 
 
     }
